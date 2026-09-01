@@ -1,0 +1,82 @@
+{
+  "id": "kungal-catalog",
+  "name": "KunGalgame",
+  "version": "0.1.0",
+  "description": "基于鲲 Galgame 生态 NextMoe Public API v2 的元数据刮削器：作品搜索、元数据、封面与截图",
+  "author": "vnite-plugin-kungal",
+  "homepage": "https://github.com/KunMoe/kun-galgame-infra",
+  "license": "GPL-3.0-only",
+  "vniteVersion": "4.0.0",
+  "main": "dist/index.js",
+  "category": "scraper",
+  "keywords": [
+    "galgame",
+    "wiki",
+    "kungal",
+    "nextmoe",
+    "scraper",
+    "vnite-plugin"
+  ],
+  "configuration": [
+    {
+      "id": "apiKey",
+      "title": "API Key",
+      "type": "string",
+      "default": "",
+      "description": "NextMoe 开发者门户（developer.nextmoe.dev）铸造的 nmk_ 开头的应用密钥，scope 需含 catalog:read",
+      "controlOptions": {
+        "controlType": "input",
+        "inputType": "password",
+        "placeholder": "nmk_live_..."
+      }
+    },
+    {
+      "id": "baseUrl",
+      "title": "API Base URL",
+      "type": "string",
+      "default": "https://api.nextmoe.dev/v2",
+      "description": "公开 API 根地址，一般无需修改",
+      "controlOptions": {
+        "controlType": "input",
+        "inputType": "url",
+        "placeholder": "https://api.nextmoe.dev/v2"
+      }
+    },
+    {
+      "id": "lang",
+      "title": "首选语言",
+      "type": "select",
+      "default": "zh-Hans",
+      "options": [
+        {
+          "label": "简体中文（回退日文原名）",
+          "value": "zh-Hans"
+        },
+        {
+          "label": "日文原名",
+          "value": "ja"
+        }
+      ],
+      "controlOptions": {
+        "controlType": "select"
+      }
+    },
+    {
+      "id": "nsfw",
+      "title": "包含 R18 作品",
+      "type": "boolean",
+      "default": true,
+      "description": "关闭后请求不带 nsfw=true，R18 分级作品将直接 404 不可见",
+      "controlOptions": {
+        "controlType": "switch"
+      }
+    }
+  ],
+  "scripts": {
+    "build": "tsc",
+    "pack": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pack.ps1"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
