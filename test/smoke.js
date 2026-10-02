@@ -101,7 +101,10 @@ plugin.activate(api).then(async () => {
             { id: 'c2', display_name: 'ねこにゃん', attribution_role: 'brand' },
             { id: 'c3', display_name: '发行商X', attribution_role: 'publisher' }
           ],
-          links: [{ source: 'vndb', url: 'https://vndb.org/v12345' }]
+          links: [
+            { source: 'vndb', url: 'https://vndb.org/v12345' },
+            { source: 'vndb', url: 'https://vndb.org/v12346' }
+          ]
         })
       }
     }
@@ -116,9 +119,12 @@ plugin.activate(api).then(async () => {
   assert.deepStrictEqual(meta.publishers, ['发行商X'])
   assert.deepStrictEqual(meta.tags, ['恋愛'])
   assert.deepStrictEqual(meta.platforms, ['Windows'])
-  assert.deepStrictEqual(meta.relatedSites, [{ label: 'vndb', url: 'https://vndb.org/v12345' }])
+  assert.deepStrictEqual(meta.relatedSites, [
+    { label: 'KunGalgame', url: 'https://www.moyu.moe/galgame/12345' },
+    { label: 'vndb', url: 'https://vndb.org/v12345' }
+  ])
   assert.strictEqual(meta.extra[0].key, 'rating_vndb')
-  console.log('OK: getGameMetadata maps detail')
+  console.log('OK: getGameMetadata maps detail (KunGalgame first, dup source deduped)')
 
   // 6. covers
   global.fetch = async (url) => {
@@ -138,8 +144,8 @@ plugin.activate(api).then(async () => {
     throw new Error('unexpected url: ' + u)
   }
   const covers = await registered.getGameCovers({ type: 'id', value: '12345' })
-  assert.deepStrictEqual(covers, ['https://img.example/cv2.webp', 'https://img.example/cv1.webp'])
-  console.log('OK: getGameCovers pins portrait first')
+  assert.deepStrictEqual(covers, ['https://img.example/cv1.webp', 'https://img.example/cv2.webp'])
+  console.log('OK: getGameCovers reversed (last image first)')
 
   // 7. backgrounds
   global.fetch = async (url) => {

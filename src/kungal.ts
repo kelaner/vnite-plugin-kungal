@@ -286,9 +286,20 @@ export function createKungalProvider(api: IPluginAPI): ScraperProvider {
         )
       ]
 
-      const relatedSites = (Array.isArray(work?.links) ? work.links : [])
-        .filter((l: any) => l?.url)
-        .map((l: any) => ({ label: String(l.source ?? 'link'), url: String(l.url) }))
+      // KunGalgame 自身页面链接置顶；links 按 source 去重，重复 source 只保留第一项
+      const seenSources = new Set<string>()
+      const relatedSites = [
+        { label: 'KunGalgame', url: `https://www.moyu.moe/galgame/${workId}` },
+        ...(Array.isArray(work?.links) ? work.links : [])
+          .filter((l: any) => l?.url)
+          .map((l: any) => ({ label: String(l.source ?? 'link'), url: String(l.url) }))
+          .filter((l: any) => {
+            const key = String(l.label).toLowerCase()
+            if (seenSources.has(key)) return false
+            seenSources.add(key)
+            return true
+          })
+      ]
 
       const platforms = [
         ...new Set(
@@ -330,7 +341,8 @@ export function createKungalProvider(api: IPluginAPI): ScraperProvider {
         .map((c) => c?.url)
         .filter(Boolean)
       const rest = items.map((c) => c?.url).filter(Boolean)
-      return [...pinned, ...rest.filter((u) => !pinned.includes(u))]
+      // 整体倒序：Vnite 取数组第一张保存，倒序后即优先采用原顺序的最后一张
+      return [...pinned, ...rest.filter((u) => !pinned.includes(u))].reverse()
     },
 
     async getGameBackgrounds(identifier: ScraperIdentifier): Promise<string[]> {

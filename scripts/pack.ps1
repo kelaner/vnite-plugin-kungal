@@ -31,10 +31,14 @@ if (Test-Path (Join-Path $root 'README.md')) { Copy-Item (Join-Path $root 'READM
 [System.IO.File]::WriteAllText((Join-Path $tmp 'manifest.json'), $manifestJson, $utf8NoBom)
 
 $safeId = ($id -replace '[\\/:*?"<>|\s]', '_')
+# Windows PowerShell 5.1 的 Compress-Archive 只接受 .zip 扩展名，先压成 .zip 再重命名为 .vnpkg
+$zipOut = Join-Path $distDir "$safeId-$version.zip"
+if (Test-Path $zipOut) { Remove-Item $zipOut -Force }
+Compress-Archive -Path (Join-Path $tmp '*') -DestinationPath $zipOut -CompressionLevel Optimal
+Remove-Item $tmp -Recurse -Force
 $out = Join-Path $distDir "$safeId-$version.vnpkg"
 if (Test-Path $out) { Remove-Item $out -Force }
-Compress-Archive -Path (Join-Path $tmp '*') -DestinationPath $out -CompressionLevel Optimal
-Remove-Item $tmp -Recurse -Force
+Move-Item $zipOut $out
 
 $size = [math]::Round((Get-Item $out).Length / 1KB, 2)
 Write-Host "Packed: $out ($size KB)"
