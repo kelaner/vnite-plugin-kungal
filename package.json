@@ -1,7 +1,7 @@
 {
   "id": "kungal-catalog",
   "name": "KunGalgame Catalog Scraper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "基于鲲 Galgame 生态 NextMoe Public API v2 的元数据刮削器：作品搜索、元数据、封面与截图",
   "author": "vnite-plugin-kungal",
   "homepage": "https://github.com/KunMoe/kun-galgame-infra",
