@@ -353,7 +353,8 @@ export function createKungalProvider(api: IPluginAPI): ScraperProvider {
         const urls = (Array.isArray(data?.items) ? data.items : [])
           .map((s: any) => s?.url)
           .filter(Boolean)
-        if (urls.length > 0) return urls
+        // 整体倒序：Vnite 取数组第一张保存，优先采用最后一张（首张多为带兑换栏图，末张为无字纯图概率更大）
+        if (urls.length > 0) return urls.reverse()
       } catch {
         /* 回落到 banner */
       }

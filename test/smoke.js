@@ -154,13 +154,19 @@ plugin.activate(api).then(async () => {
       return { ok: true, json: async () => ({ id: '12345' }) }
     }
     if (u.includes('/catalog/works/12345/screenshots')) {
-      return { ok: true, json: async () => ({ object: 'list', items: [{ url: 'https://img.example/ss1.webp' }] }) }
+      return { ok: true, json: async () => ({
+        object: 'list',
+        items: [
+          { url: 'https://img.example/ss1.webp' },
+          { url: 'https://img.example/ss2.webp' }
+        ]
+      }) }
     }
     throw new Error('unexpected url: ' + u)
   }
   const bg = await registered.getGameBackgrounds({ type: 'id', value: '12345' })
-  assert.deepStrictEqual(bg, ['https://img.example/ss1.webp'])
-  console.log('OK: getGameBackgrounds')
+  assert.deepStrictEqual(bg, ['https://img.example/ss2.webp', 'https://img.example/ss1.webp'])
+  console.log('OK: getGameBackgrounds reversed (last image first)')
 
   // 8. deactivate
   await plugin.deactivate(api)
